@@ -1,0 +1,8 @@
+.site-intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:#080808;color:#f5f5f5;overflow:hidden;opacity:1;transition:opacity .8s ease}
+.site-intro--exit{opacity:0;pointer-events:none}
+.site-intro__mark{display:flex;margin:0;padding-right:.09em;font-family:Arial,sans-serif;font-size:clamp(86px,17vw,240px);font-weight:600;line-height:.85;letter-spacing:-.09em}
+.site-intro__mark span{display:block;opacity:0;transform:translateY(18px);animation:gbg-reveal .7s cubic-bezier(.2,.7,.2,1) forwards}
+.site-intro__mark span:nth-child(2){animation-delay:.12s}
+.site-intro__mark span:nth-child(3){animation-delay:.24s}
+@keyframes gbg-reveal{to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.site-intro__mark span{animation:none;opacity:1;transform:none}}

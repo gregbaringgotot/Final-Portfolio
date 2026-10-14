@@ -1,0 +1,9 @@
+.fold-text{display:inline-block;perspective:var(--fold-perspective);white-space:nowrap}
+.fold-text__piece,.fold-text__space{display:inline-block;white-space:pre}
+.fold-text__piece{position:relative;transform-origin:center top;backface-visibility:hidden}
+.fold-text--mount .fold-text__piece{animation:fold-text-open var(--fold-duration) cubic-bezier(.22,1,.36,1) both;animation-delay:var(--fold-delay)}
+.fold-text--bottom .fold-text__piece{transform-origin:center bottom}
+.fold-text--bottom.fold-text--mount .fold-text__piece{animation-name:fold-text-open-bottom}
+@keyframes fold-text-open{from{opacity:calc(1 - var(--fold-crease));transform:rotateX(-88deg);filter:brightness(calc(1 - var(--fold-crease)))}to{opacity:1;transform:rotateX(0);filter:brightness(1)}}
+@keyframes fold-text-open-bottom{from{opacity:calc(1 - var(--fold-crease));transform:rotateX(88deg);filter:brightness(calc(1 - var(--fold-crease)))}to{opacity:1;transform:rotateX(0);filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.fold-text--mount .fold-text__piece{animation:none}}

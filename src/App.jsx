@@ -1,819 +1,152 @@
-"use client"
+import { useCallback, useEffect, useState } from 'react'
+import { ArrowDown, ArrowUpRight, Menu, Moon, Sun, X } from './components/Icons'
+import ShaderHero from './components/ShaderHero'
+import ClickSpark from './components/ClickSpark'
+import LogoLoop from './components/LogoLoop/LogoLoop'
+import HalftoneReveal from './components/HalftoneReveal/HalftoneReveal'
+import FoldText from './components/FoldText'
+import ScrollFloat from './components/ScrollFloat'
+import HoloCard from './components/HoloCard'
+import FolderFloat from './components/FolderFloat'
+import FlexCarousel from './components/FlexCarousel'
+import SiteIntro from './components/SiteIntro'
+import { SiReact, SiJavascript, SiHtml5, SiCss, SiTailwindcss, SiVite, SiFirebase, SiFigma, SiGit } from 'react-icons/si'
+import ProjectModal from './components/ProjectModal'
+import portrait from './assets/Confident Studio Headshot.png'
+import heroPortrait from './assets/Background Images/dark_picture.png'
+import cv from './assets/Greg_Gotot_CV.pdf.pdf'
+import uswThumb from './assets/projects/USW-1.png'
+import usw1 from './assets/projects/USW-2.png'
+import usw2 from './assets/projects/USW-3.png'
+import usw3 from './assets/projects/USW-4.png'
+import yssThumb from './assets/projects/YSS-1.png'
+import yss1 from './assets/projects/YSS-2.png'
+import yss2 from './assets/projects/YSS-3.png'
+import yss3 from './assets/projects/YSS-4.png'
+import cert1 from './assets/certificates/cert1.png'
+import cert2 from './assets/certificates/cert2.png'
+import cert3 from './assets/certificates/cert3.png'
+import cert4 from './assets/certificates/cert4.png'
+import cert5 from './assets/certificates/cert5.png'
+import cert6 from './assets/certificates/cert6.png'
 
-import { useState, useEffect, useRef } from "react"
-
-import heroBg from "./assets/Background Images/Hero_Bg.png"
-import profilePic from "./assets/Picture.png"
-
-// Skill Icons - Frontend
-import reactIcon from "./assets/skills/react.png"
-import jsIcon from "./assets/skills/javascript.png"
-import html5Icon from "./assets/skills/html5.png"
-import css3Icon from "./assets/skills/css3.png"
-import tailwindIcon from "./assets/skills/tailwind.png"
-import viteIcon from "./assets/skills/vite.png"
-
-// Skill Icons - Tools
-import gitIcon from "./assets/skills/git.png"
-import firebaseIcon from "./assets/skills/firebase.png"
-import figmaIcon from "./assets/skills/figma.png"
-import vscodeIcon from "./assets/skills/vscode.png"
-import canvaIcon from "./assets/skills/canva.png"
-
-
-
-import logoLight from "./assets/Logo_Light.png" // Your white/light logo
-import logoDark from "./assets/Logo_Dark.png" // Your dark logo
-
-import skillPicLight from "./assets/Background Images/white_picture.png"
-import skillPicDark from "./assets/Background Images/dark_picture.png"
-
-import ProjectModal from "../src/components/ProjectModal"
-
-// Project Images
-import uswThumb from "./assets/projects/USW-1.png"
-import usw1 from "./assets/projects/USW-2.png"
-import usw2 from "./assets/projects/USW-3.png"
-import usw3 from "./assets/projects/USW-4.png"
-
-import yssThumb from "./assets/projects/YSS-1.png"
-import yss1 from "./assets/projects/YSS-2.png"
-import yss2 from "./assets/projects/YSS-3.png"
-import yss3 from "./assets/projects/YSS-4.png"
-
-
-import cert1 from "./assets/certificates/cert1.png"
-import cert2 from "./assets/certificates/cert2.png"
-import cert3 from "./assets/certificates/cert3.png"
-import cert4 from "./assets/certificates/cert4.png"
-import cert5 from "./assets/certificates/cert5.png"
-import cert6 from "./assets/certificates/cert6.png"
-
-
-
-// Skill Icons - using placeholder colors
-const SkillIcon = ({ src, name }) => (
-  <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
-    <img
-      src={src || "/placeholder.svg"}
-      alt={`${name} icon`}
-      className="w-full h-full object-contain"
-      // This handles cases where the image might be missing
-      onError={(e) => {
-        e.target.src = "https://via.placeholder.com/32"
-      }}
-    />
-  </div>
-)
-
-// Custom SVG Icons
-const MenuIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="3" y1="12" x2="21" y2="12"></line>
-    <line x1="3" y1="6" x2="21" y2="6"></line>
-    <line x1="3" y1="18" x2="21" y2="18"></line>
-  </svg>
-)
-
-const XIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-)
-
-const SunIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="12" cy="12" r="5"></circle>
-    <line x1="12" y1="1" x2="12" y2="3"></line>
-    <line x1="12" y1="21" x2="12" y2="23"></line>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-    <line x1="1" y1="12" x2="3" y2="12"></line>
-    <line x1="21" y1="12" x2="23" y2="12"></line>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-  </svg>
-)
-
-const MoonIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  </svg>
-)
-
-const GithubIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-  </svg>
-)
-
-const LinkedinIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-  </svg>
-)
-
-const MailIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-    <polyline points="22,6 12,13 2,6"></polyline>
-  </svg>
-)
-
-const ExternalLinkIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-    <polyline points="15 3 21 3 21 9"></polyline>
-    <line x1="10" y1="14" x2="21" y2="3"></line>
-  </svg>
-)
-
-const ChevronDownIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="6 9 12 15 18 9"></polyline>
-  </svg>
-)
-
-export default function Portfolio() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(true)
-  const observerRefs = useRef({})
-  const [selectedProject, setSelectedProject] = useState(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const openModal = (project) => {
-  setSelectedProject(project)
-  setIsModalOpen(true)
-  document.body.style.overflow = 'hidden' // Prevent background scroll
-}
-
-const closeModal = () => {
-  setIsModalOpen(false)
-  setSelectedProject(null)
-  document.body.style.overflow = 'unset'
-}
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-
-      const sections = ["home", "about", "skills", "projects", "certificates", "contact"]
-      const current = sections.find((section) => {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
-        }
-        return false
-      })
-
-      if (current) setActiveSection(current)
-    }
-
-    handleScroll()
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  useEffect(() => {
-    const options = {
-      threshold: 0.15,
-      rootMargin: "0px",
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("animate-in")
-        } else {
-          entry.target.classList.remove("animate-in")
-        }
-      })
-    }, options)
-
-    const sections = document.querySelectorAll(".animate-on-scroll")
-    sections.forEach((section) => observer.observe(section))
-
-    return () => observer.disconnect()
-  }, [])
-
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-      setIsMenuOpen(false)
-    }
-  }
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
-  const theme = {
-    bg: isDarkMode ? "bg-[#0F1115]" : "bg-[#F5F5F0]",
-    bgAlt: isDarkMode ? "bg-[#161A22]" : "bg-[#E8E6DD]",
-    text: isDarkMode ? "text-[#E6E8EB]" : "text-[#1A1A1A]",
-    textMuted: isDarkMode ? "text-[#A1A6B0]" : "text-[#5A5A5A]",
-    border: isDarkMode ? "border-[#A1A6B0]/10" : "border-[#1A1A1A]/10",
-    borderHover: isDarkMode ? "border-[#E6E8EB]/30" : "border-[#1A1A1A]/30",
-    card: isDarkMode ? "bg-[#0F1115]" : "bg-white",
-    overlay: isDarkMode ? "bg-[#0F1115]/60" : "bg-[#F5F5F0]/80",
-    btnPrimary: isDarkMode ? "bg-[#E6E8EB] text-[#0F1115] hover:bg-white" : "bg-[#1A1A1A] text-white hover:bg-black",
-    btnSecondary: isDarkMode
-      ? "border-[#E6E8EB] text-[#E6E8EB] hover:bg-[#E6E8EB] hover:text-[#0F1115]"
-      : "border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white",
-  }
-
-  const skills = {
-    frontend: [
-      { name: "React", icon: reactIcon },
-      { name: "JavaScript", icon: jsIcon },
-      { name: "HTML5", icon: html5Icon },
-      { name: "CSS3", icon: css3Icon },
-      { name: "Tailwind CSS", icon: tailwindIcon },
-      { name: "Vite", icon: viteIcon },
-    ],
-    tools: [
-      { name: "Git", icon: gitIcon },
-      { name: "Firebase", icon: firebaseIcon },
-      { name: "Figma", icon: figmaIcon },
-      { name: "VS Code", icon: vscodeIcon },
-      { name: "Canva", icon: canvaIcon },
-    ],
-  }
-
-  const projects = [
-    {
-      name: "Upcycled Streetwear",
-      description:
-        "Developed a mobile and web e-commerce platform for a thrift shop with automated order claiming, inventory tracking, sales analytics, and a bidding system to enhance efficiency and engagement.",
-      role: "Front End Developer & UI Designer",
-      tech: ["React Native", "Firebase", "Tailwind CSS"],
-      demo: "https://drive.google.com/file/d/15AZLNAPpMWu4JoZDKAQZtZt-bFmlUN9Y/view?usp=sharing",
-      code: "https://github.com/LudiveseCristian/final_USW.git",
-      thumbnail: uswThumb, 
-      images: [usw1, usw2, usw3],
-      features: [
-        "Minimalist faith-based product showcase",
-        "Admin order management dashboard",
-        "Firebase backend integration",
-        "Clean and adaptive design",
-        "To check the code in just get the humanata branch"
-      ]
-    },
-    {
-      name: "Young Soul Seekers (YSS)",
-      description: "Designed and developed a minimalist website for a Christian clothing brand, enabling product browsing and order management through an admin dashboard without online payment integration..",
-      role: "Full Stack Developer",
-      tech: ["React", "JavaScript", "Vite", "CSS3", "Firebase"],
-      demo: "#",
-      code: "https://github.com/gregbaringgotot/YSS.git",
-      thumbnail: yssThumb, 
-      images: [yss1, yss2, yss3],
-      features: [
-        "Clean, minimalist product showcase",
-        "Admin dashboard for order management",
-        "Firebase backend integration",
-        "Responsive design"
-      ]
-    },
-  ]
-
+const projects = [
+  { name: 'Upcycled Streetwear', description: 'Developed a mobile and web e-commerce platform for a thrift shop with automated order claiming, inventory tracking, sales analytics, and a bidding system to enhance efficiency and engagement.', role: 'Front End Developer & UI Designer', tech: ['React Native','Firebase','Tailwind CSS'], demo: 'https://drive.google.com/file/d/15AZLNAPpMWu4JoZDKAQZtZt-bFmlUN9Y/view?usp=sharing', code: 'https://github.com/LudiveseCristian/final_USW.git', thumbnail: uswThumb, images: [usw1,usw2,usw3], features: ['Minimalist faith-based product showcase','Admin order management dashboard','Firebase backend integration','Clean and adaptive design','To check the code in just get the humanata branch'] },
+  { name: 'Young Soul Seekers (YSS)', description: 'Designed and developed a minimalist website for a Christian clothing brand, enabling product browsing and order management through an admin dashboard without online payment integration.', role: 'Full Stack Developer', tech: ['React','JavaScript','Vite','CSS3','Firebase'], code: 'https://github.com/gregbaringgotot/YSS.git', thumbnail: yssThumb, images: [yss1,yss2,yss3], features: ['Clean, minimalist product showcase','Admin dashboard for order management','Firebase backend integration','Responsive design'] },
+]
 const certificates = [
-  {
-    title: "Java Programming",
-    issuer: "Great Learning Certificate",
-    date: "March 2024",
-    description: "Java fundamentals and basic OOP",
-    image: cert1
-  },
-  {
-    title: "Routing and Switching",
-    issuer: "Rujie RCNA Certificate",
-    date: "October 2025",
-    description: "Network routing and switching basics",
-    image: cert2
-  },
-  {
-    title: "Fiber Optic Training",
-    issuer: "Premuim Line Certificate",
-    date: "August 2025",
-    description: "Fiber installation and maintenance",
-    image: cert3
-  },
-  {
-    title: "Introduction to Graphic Design; Basic UI/UX",
-    issuer: "SimpliLearn Certificate",
-    date: "Febuary 2024",
-    description: "Visual design and UI/UX principles",
-    image: cert4
-  },
-  {
-    title: "Introduction to HTML",
-    issuer: "SimpliLearn Certificate",
-    date: "Febuary 2024",
-    description: "HTML structure and web basics",
-    image: cert5
-  },
-  {
-    title: "Information Security Associate",
-    issuer: "Premuim Line Certificate",
-    date: "August 2025",
-    description: "Cybersecurity fundamentals and best practices",
-    image: cert6
-  },
-];
-
-
-  return (
-    <div className={`${theme.bg} ${theme.text} min-h-screen transition-colors duration-300`}>
-      {/* Header */}
-      <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? `${theme.bg} backdrop-blur-sm shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-black/5"}` : "bg-transparent"}`}
-      >
-        <nav className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <button
-            onClick={() => scrollToSection("home")}
-            className="hover:scale-110 transition-transform duration-300 cursor-pointer"
-          >
-            <img
-              src={isDarkMode ? logoLight : logoDark}
-              alt="Logo"
-              className="h-8 w-auto" // Adjust height as needed
-            />
-          </button>
-
-          {/* Desktop Menu */}
-          <ul className="hidden md:flex space-x-8 items-center">
-            {["Home", "About", "Skills", "Projects", "Certificates", "Contact"].map((item) => (
-              <li key={item}>
-                <button
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`${isDarkMode ? "hover:text-white" : "hover:text-black"} transition-colors cursor-pointer ${
-                    activeSection === item.toLowerCase()
-                      ? `${isDarkMode ? "text-white" : "text-black"} font-semibold`
-                      : theme.textMuted
-                  }`}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
-            <li>
-              <button
-                onClick={toggleTheme}
-                className={`p-2 rounded-full ${theme.card} ${theme.border} border hover:scale-110 transition-transform duration-300`}
-                aria-label="Toggle theme"
-              >
-                {isDarkMode ? <SunIcon /> : <MoonIcon />}
-              </button>
-            </li>
-          </ul>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-full ${theme.card} ${theme.border} border`}
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? <SunIcon /> : <MoonIcon />}
-            </button>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`${theme.text} ${isDarkMode ? "hover:text-white" : "hover:text-black"} transition-colors cursor-pointer`}
-            >
-              {isMenuOpen ? <XIcon /> : <MenuIcon />}
-            </button>
+  {title:'Java Programming',issuer:'Great Learning Certificate',date:'March 2024',description:'Java fundamentals and basic OOP',image:cert1},
+  {title:'Routing and Switching',issuer:'Rujie RCNA Certificate',date:'October 2025',description:'Network routing and switching basics',image:cert2},
+  {title:'Fiber Optic Training',issuer:'Premuim Line Certificate',date:'August 2025',description:'Fiber installation and maintenance',image:cert3},
+  {title:'Introduction to Graphic Design; Basic UI/UX',issuer:'SimpliLearn Certificate',date:'Febuary 2024',description:'Visual design and UI/UX principles',image:cert4},
+  {title:'Introduction to HTML',issuer:'SimpliLearn Certificate',date:'Febuary 2024',description:'HTML structure and web basics',image:cert5},
+  {title:'Information Security Associate',issuer:'Premuim Line Certificate',date:'August 2025',description:'Cybersecurity fundamentals and best practices',image:cert6},
+]
+const skillGroups = [
+  { title:'Front-End Development', items:['React','JavaScript','HTML5','CSS3','Tailwind CSS','Vite'] },
+  { title:'Programming Languages', items:['Python','Java'] },
+  { title:'UI / UX Design', items:['Interface design','Responsive design','Graphic design'] },
+  { title:'Tools & Platforms', items:['Figma','Git','VS Code','Canva','Firebase'] },
+  { title:'Other Creative Work', items:['Video editing','Visual storytelling'] },
+]
+const techLogos = [
+  { node: <SiReact />, title: 'React', href: 'https://react.dev' },
+  { node: <SiJavascript />, title: 'JavaScript', href: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript' },
+  { node: <SiHtml5 />, title: 'HTML5', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML' },
+  { node: <SiCss />, title: 'CSS', href: 'https://developer.mozilla.org/en-US/docs/Web/CSS' },
+  { node: <SiTailwindcss />, title: 'Tailwind CSS', href: 'https://tailwindcss.com' },
+  { node: <SiVite />, title: 'Vite', href: 'https://vite.dev' },
+  { node: <SiFirebase />, title: 'Firebase', href: 'https://firebase.google.com' },
+  { node: <SiFigma />, title: 'Figma', href: 'https://www.figma.com' },
+  { node: <SiGit />, title: 'Git', href: 'https://git-scm.com' },
+]
+const nav = ['About','Projects','Journey','Skills','Certificates','Contact']
+const journeyDetails = [
+  { title: 'Building a Unity world', subtitle: 'Game development', alt: 'Unity game project open across two screens', shape: 'portrait' },
+  { title: 'Learning together', subtitle: 'Classroom milestones', alt: 'Classmates holding certificates after a learning session' },
+  { title: 'People behind the progress', subtitle: 'BSIT community', alt: 'Students and mentors gathered in a classroom' },
+  { title: 'Hands-on IT sessions', subtitle: 'Learning by doing', alt: 'Student group in a computer laboratory' },
+  { title: 'Beyond the classroom', subtitle: 'Student community', alt: 'Students taking part in a campus activity' },
+  { title: 'Git basics unlocked', subtitle: 'SWUdevs workshop', alt: 'Group photo after a Git basics workshop' },
+  { title: 'Finding my people', subtitle: 'Community and collaboration', alt: 'Student developer community group photo' },
+  { title: 'A shared moment', subtitle: 'Student developer community', alt: 'Students posing together at a community gathering' },
+  { title: 'Code Till Dawn', subtitle: 'Teamwork under pressure', alt: 'Team working on laptops during Code Till Dawn 2026', shape: 'square' },
+  { title: 'At the keyboard', subtitle: 'Code Till Dawn 2026', alt: 'Focused coding during Code Till Dawn 2026', shape: 'square' },
+  { title: 'Celebrating the work', subtitle: 'Code Till Dawn 2026', alt: 'Participants holding certificates at Code Till Dawn 2026' },
+  { title: 'Late-night development', subtitle: 'Writing and refining code', alt: 'Code editor open on a monitor during a late-night session', shape: 'portrait' },
+  { title: 'Designing the next solution', subtitle: 'Interface work', alt: 'Recruitment interface designs open in Figma', shape: 'portrait' },
+]
+const journeyImages = import.meta.glob('./assets/journey_pictures/*.jpg', { eager: true, query: '?url', import: 'default' })
+const journeyImagesByNumber = Object.fromEntries(Object.entries(journeyImages).map(([path, src]) => [Number(path.match(/(\d+)\.jpg$/)[1]), src]))
+const journeyOrder = [10, 1, 6, 2, 3, 4, 5, 7, 8, 9, 11, 12, 13]
+const gallery = journeyOrder.map(number => ({ src: journeyImagesByNumber[number], ...journeyDetails[number - 1] }))
+function Reveal({children, className=''}) { return <div className={`reveal ${className}`}>{children}</div> }
+function SectionLabel({number, children}) { return <div className="section-label"><span>{number} / {children}</span><span>GBG — 2026</span></div> }
+function Journey() {
+  const [selected, setSelected] = useState(null)
+  useEffect(() => {
+    if (selected === null) return
+    const closeOnEscape = event => { if (event.key === 'Escape') setSelected(null) }
+    document.addEventListener('keydown', closeOnEscape)
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', closeOnEscape); document.body.style.overflow = previousOverflow }
+  }, [selected])
+  const photo = selected === null ? null : gallery[selected]
+  return <section id="journey" className="section photography"><div className="container"><SectionLabel number="03">THE JOURNEY</SectionLabel><Reveal><div className="section-heading-row"><div><p className="eyebrow">BSIT / BEYOND THE SCREEN</p><h2><ScrollFloat>The journey</ScrollFloat> <em><ScrollFloat>so far.</ScrollFloat></em></h2></div><p className="section-intro">From Unity builds and late-night coding to workshops, shared milestones, and the people who made the work possible.</p></div></Reveal><div className="journey-carousel"><FlexCarousel items={gallery} preset="liquid" intro="rise" fit="natural" cardHeight={0.58} gap={12} squeeze={0.2} focusOnClick={false} onSelect={index => setSelected(index)} captions radius={0} lensWidth={0.74} lensHeight={1.18} tilt={62} roundness={1} bend={0.34} reach={0.38} curl="twist" dispersion={0.45} liquid={0} followCursor={false} autoplay={false} interval={4} captureWheel /></div></div>{photo && <div className="journey-lightbox" role="presentation" onClick={() => setSelected(null)}><div className="journey-lightbox__content" role="dialog" aria-modal="true" aria-label={photo.title} onClick={event => event.stopPropagation()}><button className="journey-lightbox__close" type="button" aria-label="Close photo" onClick={() => setSelected(null)}><X size={22} /></button><img src={photo.src} alt={photo.alt} /><div className="journey-lightbox__caption"><div><strong>{photo.title}</strong><span>{photo.subtitle}</span></div><span>{String(selected + 1).padStart(2, '0')} / {String(gallery.length).padStart(2, '0')}</span></div></div></div>}</section>
+}export default function App() {
+  const [showSite,setShowSite]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const [introDone,setIntroDone]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const revealSite=useCallback(()=>setShowSite(true),[])
+  const finishIntro=useCallback(()=>setIntroDone(true),[])
+  const [menuOpen,setMenuOpen]=useState(false)
+  const [scrolled,setScrolled]=useState(false)
+  const [project,setProject]=useState(null)
+  const [theme,setTheme]=useState(()=>localStorage.getItem('portfolio-theme')==='light'?'light':'dark')
+  useEffect(()=>{localStorage.setItem('portfolio-theme',theme);document.documentElement.dataset.theme=theme},[theme])
+  useEffect(()=>{const onScroll=()=>setScrolled(window.scrollY>30);onScroll();window.addEventListener('scroll',onScroll,{passive:true});return()=>window.removeEventListener('scroll',onScroll)},[])
+  useEffect(()=>{if(!showSite)return;const nodes=document.querySelectorAll('.reveal');if (!('IntersectionObserver' in window)) {nodes.forEach(n=>n.classList.add('in-view'));return} const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');io.unobserve(e.target)}}),{threshold:.08});nodes.forEach(n=>io.observe(n));return()=>io.disconnect()},[showSite])
+  useEffect(()=>{document.body.style.overflow=project?'hidden':'';return()=>{document.body.style.overflow=''}},[project])
+  return <>
+    {!introDone && <SiteIntro reveal={showSite} onLettersDone={revealSite} onDone={finishIntro} />}
+    {showSite && <ClickSpark sparkColor={theme === 'light' ? '#111' : '#fff'} shape="line" sparkCount={8} sparkSize={14} sparkRadius={30} duration={500}>
+    <div className={`site-shell theme-${theme}`}>
+    <header className={`site-header ${scrolled?'scrolled':''}`}><div className="nav-inner"><a className="wordmark" href="#home" onClick={()=>setMenuOpen(false)} aria-label="Greg Baring Gotot, home">GBG<span>®</span></a><nav className={menuOpen?'nav-links open':'nav-links'} aria-label="Primary navigation">{nav.map(item=><a key={item} href={`#${item.toLowerCase()}`} onClick={()=>setMenuOpen(false)}>{item}</a>)}</nav><button className="theme-toggle" type="button" onClick={()=>setTheme(theme==='dark'?'light':'dark')} aria-label={`Switch to ${theme==='dark'?'light':'dark'} mode`} title={`Switch to ${theme==='dark'?'light':'dark'} mode`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button><a className="nav-cta" href="mailto:gregbaringgotot@gmail.com">LET'S TALK <ArrowUpRight size={15}/></a><button className="menu-toggle" onClick={()=>setMenuOpen(v=>!v)} aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen}>{menuOpen?<X/>:<Menu/>}</button></div></header>
+    <main><section id="home" className="hero">
+      <ShaderHero/>
+      <div className="hero-vignette"/>
+      <div className="hero-content container">
+        <div className="hero-overline"><span>PORTFOLIO / 2026</span></div>
+        <div className="hero-main">
+          <div className="hero-intro">
+            <p className="hero-kicker">A practice in design, code & clarity</p>
+            <h1><FoldText text="Greg Baring" splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} perspective={700} creaseShading={0.55}/><br/><FoldText text="Gotot." splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} perspective={700} creaseShading={0.55} startIndex={11}/></h1>
+            <div className="hero-lower"><p>I create clean, purposeful digital experiences that combine design, development, and storytelling.</p><a href="#projects" className="circle-link" aria-label="Explore selected work"><ArrowUpRight size={28}/></a></div>
           </div>
-        </nav>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className={`md:hidden ${theme.bgAlt} ${theme.border} border-t animate-fadeIn`}>
-            <ul className="px-6 py-4 space-y-4">
-              {["Home", "About", "Skills", "Projects", "Certificates", "Contact"].map((item) => (
-                <li key={item}>
-                  <button
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className={`block w-full text-left ${theme.textMuted} ${isDarkMode ? "hover:text-white" : "hover:text-black"} transition-colors cursor-pointer`}
-                  >
-                    {item}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </header>
-
-      {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={heroBg || "/placeholder.svg"}
-            alt="Background"
-            className="w-full h-full object-cover animate-slowZoom"
-          />
-          <div className={`absolute inset-0 ${theme.overlay}`}></div>
-        </div>
-
-        {/* Content */}
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1
-            className={`text-5xl md:text-7xl font-normal mb-1 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"} animate-fadeInUp py-12`}
-          >
-            Greg Baring Gotot
-          </h1>
-          <p
-            className={`text-xl md:text-2xl mb-8 ${theme.textMuted} animate-fadeInUp`}
-            style={{ animationDelay: "0.2s" }}
-          >
-            Web Developer • Web Designer • Graphic Designer • Video Editor
-          </p>
-          <p
-            className={`text-2xl md:text-3xl font-light mb-4 max-w-3xl mx-auto ${theme.text} animate-fadeInUp`}
-            style={{ animationDelay: "0.4s" }}
-          >
-            I create clean, purposeful digital experiences that combine design, development, and storytelling.
-          </p>
-          <p
-            className={`text-lg ${theme.textMuted} mb-12 max-w-2xl mx-auto animate-fadeInUp`}
-            style={{ animationDelay: "0.6s" }}
-          >
-            I focus on building modern websites, visual designs, and video content that are not only visually appealing,
-            but also easy to use and meaningful for real users.
-          </p>
-          <div
-            className="flex flex-col sm:flex-row gap-4 justify-center animate-fadeInUp"
-            style={{ animationDelay: "0.8s" }}
-          >
-            <a
-              href="src\assets\Greg_Gotot_CV.pdf.pdf"
-              download="Greg_Gotot_CV.pdf"
-              className={`px-8 py-3 ${theme.btnPrimary} font-semibold hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-center`}
-            >
-              Download CV
-            </a>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className={`px-8 py-3 border-2 ${theme.btnSecondary} hover:scale-105 transition-all duration-300 cursor-pointer`}
-            >
-              Contact Me
-            </button>
-          </div>
-          <button
-            onClick={() => scrollToSection("about")}
-            className={`mt-16 inline-block animate-bounce ${theme.textMuted} ${isDarkMode ? "hover:text-white" : "hover:text-black"} transition-colors cursor-pointer`}
-          >
-            <ChevronDownIcon />
-          </button>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className={`min-h-screen flex items-center px-6 py-20 ${theme.bgAlt}`}>
-        <div className="max-w-6xl mx-auto w-full animate-on-scroll opacity-0">
-          <h2
-            className={`text-4xl md:text-5xl font-bold mb-12 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"} text-center`}
-          >
-            About Me
-          </h2>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Profile Picture */}
-            <div className="flex justify-center">
-              <div className="relative group">
-                <div
-                  className={`w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden border-4 ${theme.border} ${theme.borderHover} transition-all duration-500 group-hover:scale-105`}
-                >
-                  <img src={profilePic || "/placeholder.svg"} alt="Greg Gotot" className="w-full h-full object-cover" />
-                </div>
-                <div
-                  className={`absolute -inset-4 ${isDarkMode ? "bg-gradient-to-br from-[#E6E8EB]/5 to-transparent" : "bg-gradient-to-br from-[#1A1A1A]/5 to-transparent"} rounded-lg -z-10 ${isDarkMode ? "group-hover:from-[#E6E8EB]/10" : "group-hover:from-[#1A1A1A]/10"} transition-all duration-500`}
-                ></div>
-              </div>
+          <div className="hero-visual">
+            <div className="hero-portrait" role="img" aria-label="Greg Baring Gotot portrait with an interactive halftone reveal" style={{ '--portrait-mask': `url("${heroPortrait}")` }}>
+              <img className="hero-portrait-fallback" src={heroPortrait} alt="" />
+              <HalftoneReveal src={heroPortrait} mode="mono" shape="dot" cellSize={6} angle={45} inkColor="#f4f1ea" paperColor="#000000" revealRadius={160} dotScale={1} contrast={1.1} brightness={0} invert={false} roughness={0} misregistration={0} fit="contain" accentColor="#ff4f2a" softness={0.6} linger={1.2} reverse={false} wander={false} clickBurst intro />
             </div>
-
-            {/* About Text */}
-            <div className={`space-y-6 text-lg md:text-xl leading-relaxed ${theme.textMuted}`}>
-              <p
-                className={`${isDarkMode ? "hover:text-[#E6E8EB]" : "hover:text-[#1A1A1A]"} transition-colors duration-300`}
-              >
-                I'm a frontend developer with a strong passion for creating interfaces that feel simple to use, even
-                when the system behind them is complex.
-              </p>
-              <p
-                className={`${isDarkMode ? "hover:text-[#E6E8EB]" : "hover:text-[#1A1A1A]"} transition-colors duration-300`}
-              >
-                My background spans web development, UI design, graphic design, and video editing. I've worked on
-                academic projects including barangay management systems, student portals, and community-focused
-                applications that solve real-world problems.
-              </p>
-              <p
-                className={`${isDarkMode ? "hover:text-[#E6E8EB]" : "hover:text-[#1A1A1A]"} transition-colors duration-300`}
-              >
-                I believe great design isn't just about aesthetics — it's about clarity, purpose, and helping users
-                achieve their goals effortlessly.
-              </p>
-              <p className={`${theme.text} font-semibold`}>
-                I'm currently open to internships and junior developer roles where I can continue learning and
-                contribute to meaningful projects.
-              </p>
+            <div className="hero-folder-list" aria-label="Skills folders">
+              <div className="hero-folder hero-folder--development"><FolderFloat label="Web Development" sublabel="6 skills" items={['React', 'Vite', 'HTML', 'CSS', 'Python', 'Java']} /></div>
+              <div className="hero-folder hero-folder--design"><FolderFloat label="Web & Graphic Design" sublabel="4 skills" items={['UI / UX', 'Figma', 'Responsive Design', 'Graphic Design']} /></div>
+              <div className="hero-folder hero-folder--creative"><FolderFloat label="Video Editing" sublabel="3 skills" items={['Video Editing', 'Visual Storytelling', 'Canva']} /></div>
+              <div className="hero-folder hero-folder--data"><FolderFloat label="Data Analysis" sublabel="2 skills" items={['Python', 'Data Analysis']} /></div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Skills Section */}
-      <section id="skills" className="min-h-screen flex items-center px-6 py-20">
-        <div className="max-w-7xl mx-auto w-full animate-on-scroll opacity-0">
-          {/* Three Column Layout: Frontend Icons | Image | Tools Icons */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-20">
-            {/* Frontend Icons - Left Column */}
-            <div className="space-y-6 flex flex-col items-center md:items-start">
-              <h3 className={`text-lg font-bold ${theme.text}`}>Frontend Skills</h3>
-              <div className="flex flex-wrap gap-6 justify-center md:justify-start">
-                {skills.frontend.map((skill) => (
-                  <div key={skill.name} className="flex flex-col items-center gap-3 group">
-                    <div className="w-14 h-14 flex items-center justify-center transition-transform group-hover:scale-110">
-                      <img
-                        src={skill.icon || "/placeholder.svg"}
-                        alt={`${skill.name} icon`}
-                        className="w-full h-full object-contain"
-                        onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/56"
-                        }}
-                      />
-                    </div>
-                    <span className={`text-xs text-center ${theme.textMuted}`}>{skill.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Center Image with Text Overlay */}
-            <div className="relative h-96 md:h-[550px] flex items-center justify-center">
-              <img
-                src={isDarkMode ? skillPicLight : skillPicDark}
-                alt="Greg Gotot"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <div
-                className={`absolute inset-0 ${isDarkMode ? "bg-gradient-to-b from-transparent via-transparent to-[#0F1115]" : "bg-gradient-to-b from-transparent via-transparent to-[#F5F5F0]"} rounded-lg`}
-              ></div>
-
-            </div>
-
-            {/* Tools Icons - Right Column */}
-            <div className="space-y-6 flex flex-col items-center md:items-end">
-              <h3 className={`text-lg font-bold ${theme.text}`}>Tool Skills</h3>
-              <div className="flex flex-wrap gap-6 justify-center md:justify-end">
-                {skills.tools.map((skill) => (
-                  <div key={skill.name} className="flex flex-col items-center gap-3 group">
-                    <div className="w-14 h-14 flex items-center justify-center transition-transform group-hover:scale-110">
-                      <img
-                        src={skill.icon || "/placeholder.svg"}
-                        alt={`${skill.name} icon`}
-                        className="w-full h-full object-contain"
-                        onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/56"
-                        }}
-                      />
-                    </div>
-                    <span className={`text-xs text-center ${theme.textMuted}`}>{skill.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className={`min-h-screen flex items-center px-6 py-20 ${theme.bgAlt}`}>
-        <div className="max-w-6xl mx-auto w-full animate-on-scroll opacity-0">
-          <h2
-            className={`text-4xl md:text-5xl font-bold mb-12 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"} text-center`}
-          >
-            Projects
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            {projects.map((project, index) => (
-              <div
-                key={index}
-                className={`${theme.card} rounded-xl overflow-hidden border ${theme.border} hover:${theme.borderHover} hover:shadow-2xl transition-all duration-500 group`}
-              >
-                {/* Project Image */}
-                <div 
-                  className="relative aspect-video overflow-hidden cursor-pointer"
-                  onClick={() => openModal(project)}
-                >
-                  <img
-                    src={project.thumbnail}
-                    alt={project.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                    <span className="text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2">
-                      View Details
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Project Content */}
-                <div className="p-6">
-                  <h3 className={`text-2xl font-bold mb-3 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"}`}>
-                    {project.name}
-                  </h3>
-                  <p className={`mb-4 ${theme.textMuted} line-clamp-2`}>
-                    {project.description}
-                  </p>
-                  <p className={`text-sm mb-4 ${theme.textMuted}`}>
-                    <span className={`font-semibold ${theme.text}`}>Role:</span> {project.role}
-                  </p>
-                  
-                  {/* Tech Stack */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className={`text-xs border ${theme.border} ${theme.textMuted} px-2 py-1 rounded transition-all duration-300`}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Action Button */}
-                  <button
-                    onClick={() => openModal(project)}
-                    className={`w-full px-6 py-3 border-2 ${theme.btnSecondary} font-semibold rounded-lg transition-all hover:scale-105`}
-                  >
-                    View Details
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Certificates Section */}
-        <section id="certificates" className="min-h-screen flex items-center px-6 py-20">
-          <div className="max-w-7xl mx-auto w-full animate-on-scroll opacity-0">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-12 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"} text-center`}>
-              Certificates
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {certificates.map((cert, index) => (
-                <div
-                  key={index}
-                  className={`${theme.card} rounded-xl overflow-hidden border ${theme.border} hover:${theme.borderHover} hover:shadow-2xl transition-all duration-500 group`}
-                >
-                  {/* Certificate Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={cert.image}
-                      alt={cert.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
-                  
-                  {/* Certificate Content */}
-                  <div className="p-6">
-                    <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"}`}>
-                      {cert.title}
-                    </h3>
-                    <p className={`text-sm font-semibold mb-2 ${theme.text}`}>
-                      {cert.issuer}
-                    </p>
-                    <p className={`text-xs ${theme.textMuted} mb-3`}>
-                      {cert.date}
-                    </p>
-                    <p className={`text-sm ${theme.textMuted}`}>
-                      {cert.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-      {/* Contact Section */}
-      <section id="contact" className={`min-h-screen flex items-center px-6 py-20 ${theme.bgAlt}`}>
-        <div className="max-w-4xl mx-auto w-full text-center animate-on-scroll opacity-0">
-          <h2 className={`text-4xl md:text-5xl font-bold mb-8 ${isDarkMode ? "text-white" : "text-[#1A1A1A]"}`}>
-            Let's Connect
-          </h2>
-          <p className={`text-xl mb-12 ${theme.textMuted}`}>Open to internships and junior developer roles.</p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-            <a
-              href="https://mail.google.com/mail/?view=cm&to=gregbaringgotot@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-6 py-3 border-2 ${theme.btnSecondary} hover:scale-105 transition-all duration-300 cursor-pointer`}
-            >
-              <MailIcon />
-              <span>Email Me</span>
-            </a>
-            <a
-              href="https://github.com/gregbaringgotot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-6 py-3 border-2 ${theme.btnSecondary} hover:scale-105 transition-all duration-300 cursor-pointer`}
-            >
-              <GithubIcon />
-              <span>GitHub</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/greg-baring-gotot-bb345733a/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-6 py-3 border-2 ${theme.btnSecondary} hover:scale-105 transition-all duration-300 cursor-pointer`}
-            >
-              <LinkedinIcon />
-              <span>LinkedIn</span>
-            </a>
-          </div>
-          <p className={`text-sm ${theme.textMuted}`}>© 2026 Greg Baring Gotot. Built with React & Tailwind CSS.</p>
-        </div>
-      </section>
-
-      {/* Project Modal */}
-      <ProjectModal
-        project={selectedProject}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        isDarkMode={isDarkMode}
-      />
-
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes slowZoom {
-          0%, 100% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.05);
-          }
-        }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        .animate-slowZoom {
-          animation: slowZoom 20s ease-in-out infinite;
-        }
-
-        .animate-on-scroll {
-          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .animate-on-scroll.animate-in {
-          opacity: 1 !important;
-          transform: translateY(0) !important;
-        }
-
-        .animate-on-scroll:not(.animate-in) {
-          opacity: 0;
-          transform: translateY(40px);
-        }
-      `}</style>
+        <div className="hero-bottom"><a href="#about">SCROLL TO EXPLORE <ArrowDown size={17}/></a></div>
+      </div>
+    </section>
+    <section id="about" className="section about"><div className="container"><SectionLabel number="01">THE PERSON BEHIND THE WORK</SectionLabel><div className="about-grid"><Reveal className="about-image-wrap"><HoloCard image={portrait} alt="Portrait of Greg Baring Gotot" foilColor="#e2e6ec" intensity={0.85} scale={1} edgeSparkle={0.8} frame={4} glare={0.5} tiltMax={14} hoverScale={1.04} radius={14} shadow /><span className="image-index">FIG. 01 — THE MAKER</span></Reveal><Reveal className="about-copy"><p className="eyebrow">A little about me</p><h2><ScrollFloat>Design with</ScrollFloat><br/><em><ScrollFloat>intention.</ScrollFloat></em><br/><ScrollFloat>Build with care.</ScrollFloat></h2><div className="about-body"><p>I'm a graduating Bachelor of Science in Information Technology student at Southwestern University PHINMA. I enjoy understanding people's challenges and turning them into practical digital solutions.</p><p>My work brings together web development, UI and UX design, graphic design, and video editing. I've implemented an e-commerce bidding system, an online shirt store, a game built with Unity, and ARTMS, an AI-powered recruitment system for applicants. These projects taught me to shape technology around the people who use it.</p><p>I start by listening, defining the problem, and finding a clear way forward. My goal is to help clients and teams create accessible, dependable experiences that make everyday tasks easier.</p></div><div className="about-tail"><span>Currently open to internships and junior developer roles.</span><a href={cv} download="Greg_Gotot_CV.pdf">DOWNLOAD CV <ArrowUpRight size={16}/></a></div></Reveal></div></div></section>
+    <section id="projects" className="section projects"><div className="container"><SectionLabel number="02">SELECTED WORK</SectionLabel><Reveal><div className="section-heading-row"><h2><ScrollFloat>Selected</ScrollFloat> <em><ScrollFloat>projects.</ScrollFloat></em></h2><p className="section-intro">Digital products shaped by a belief that usefulness and visual clarity belong together.</p></div></Reveal><div className="project-list">{projects.map((item,i)=><Reveal className={`project-item project-${i+1}`} key={item.name}><button className="project-visual" onClick={()=>setProject(item)} aria-label={`View ${item.name} project details`}><img src={item.thumbnail} alt={`${item.name} project preview`} loading="lazy"/><span className="image-action">VIEW PROJECT <ArrowUpRight size={18}/></span></button><div className="project-info"><span className="project-number">{String(i+1).padStart(2,'0')} / 0{projects.length} — {item.role}</span><h3>{item.name}</h3><p>{item.description}</p><div className="project-footer"><div>{item.tech.map(t=><span key={t}>{t}</span>)}</div><button onClick={()=>setProject(item)} aria-label={`View details for ${item.name}`}><ArrowUpRight size={24}/></button></div></div></Reveal>)}</div></div></section>
+    <Journey/>
+    <section id="skills" className="section skills"><div className="container"><SectionLabel number="04">PRACTICE & CAPABILITIES</SectionLabel><Reveal><div className="section-heading-row"><h2><ScrollFloat>What I</ScrollFloat> <em><ScrollFloat>bring.</ScrollFloat></em></h2><p className="section-intro">A mix of development, design, and visual thinking applied to thoughtful digital work.</p></div></Reveal><div className="skill-list">{skillGroups.map((group,i)=><Reveal className="skill-row" key={group.title}><span className="skill-number">0{i+1}</span><h3>{group.title}</h3><p>{group.items.join(' · ')}</p></Reveal>)}</div><Reveal className="skills-loop"><div className="skills-loop-heading"><span>TOOLS & TECHNOLOGIES</span><span>THE EVERYDAY TOOLKIT / 01—09</span></div><LogoLoop logos={techLogos} speed={100} direction="left" logoHeight={58} gap={72} hoverSpeed={0} scaleOnHover fadeOut fadeOutColor={theme === 'light' ? '#f7f7f5' : '#080808'} ariaLabel="Technologies I use" /></Reveal></div></section>
+    <section id="certificates" className="section certificates"><div className="container"><SectionLabel number="05">LEARNING & GROWTH</SectionLabel><Reveal><div className="section-heading-row"><h2><ScrollFloat>Continued</ScrollFloat> <em><ScrollFloat>learning.</ScrollFloat></em></h2><p className="section-intro">Courses and training that inform the work behind each project.</p></div></Reveal><div className="certificate-grid">{certificates.map((cert,i)=><Reveal className="certificate" key={cert.title}><div className="certificate-image"><img src={cert.image} alt={`${cert.title} certificate`} loading="lazy"/></div><div className="certificate-meta"><span>{String(i+1).padStart(2,'0')} / {cert.date}</span><h3>{cert.title}</h3><p>{cert.issuer} · {cert.description}</p></div></Reveal>)}</div></div></section>
+    <section id="contact" className="section contact"><div className="container"><SectionLabel number="06">GET IN TOUCH</SectionLabel><Reveal><p className="eyebrow">Have a project or opportunity in mind?</p><h2><ScrollFloat>Let's make</ScrollFloat><br/><em><ScrollFloat>something</ScrollFloat></em> <ScrollFloat>meaningful.</ScrollFloat></h2><div className="contact-row"><a className="contact-email" href="mailto:gregbaringgotot@gmail.com">gregbaringgotot@gmail.com <ArrowUpRight size={27}/></a><p>Open to internships and junior developer roles.<br/>Let's talk about what we can create together.</p></div></Reveal><footer><span>© {new Date().getFullYear()} GREG BARING GOTOT</span><div><a href="https://github.com/gregbaringgotot" target="_blank" rel="noopener noreferrer">GITHUB <ArrowUpRight size={13}/></a><a href="https://www.linkedin.com/in/greg-baring-gotot-bb345733a/" target="_blank" rel="noopener noreferrer">LINKEDIN <ArrowUpRight size={13}/></a><a href="#home">BACK TO TOP ?</a></div><span>DESIGNED & BUILT WITH PURPOSE</span></footer></div></section></main>
+    <ProjectModal project={project} isOpen={!!project} onClose={()=>setProject(null)}/>
     </div>
-  )
+  </ClickSpark>}
+  </>
 }
